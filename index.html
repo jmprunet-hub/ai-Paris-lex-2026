@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI LEX 2026 — Pre-event questionnaire for Cathay Capital B2B SaaS portfolio leadership teams.">
+<title>AI LEX 2026 — Pre-Event Questionnaire</title>
+<style>
+  :root {
+    --bg: #0e1218;
+    --bg-card: #161c25;
+    --bg-input: #1f2733;
+    --bg-input-focus: #2a3340;
+    --border: #2a3340;
+    --border-strong: #3a4554;
+    --text: #e6e8eb;
+    --text-muted: #8a94a3;
+    --text-dim: #5c6573;
+    --accent: #c9a961;
+    --accent-hover: #d8b974;
+    --accent-soft: rgba(201, 169, 97, 0.12);
+    --core: #5b9eff;
+    --core-soft: rgba(91, 158, 255, 0.14);
+    --error: #e87b7b;
+    --success: #6dc77f;
+    --radius: 8px;
+    --shadow: 0 1px 2px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Header */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 24px;
+    background: rgba(14, 18, 24, 0.94);
+    backdrop-filter: blur(8px);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .header-inner { max-width: 880px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { font-size: 13px; letter-spacing: 0.18em; color: var(--text-muted); text-transform: uppercase; font-weight: 500; }
+  .brand strong { color: var(--accent); font-weight: 600; }
+  .save-indicator { font-size: 12px; color: var(--text-dim); }
+  .save-indicator.saved { color: var(--success); }
+
+  /* Progress */
+  .progress-wrap {
+    max-width: 880px; margin: 0 auto;
+    padding: 0 24px;
+  }
+  .progress-bar {
+    height: 3px; background: var(--border); border-radius: 2px;
+    overflow: hidden; margin-top: 12px;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    width: 0%; transition: width 0.3s ease;
+  }
+
+  /* Container */
+  .container { max-width: 760px; margin: 0 auto; padding: 32px 24px 120px; }
+
+  /* Intro */
+  .intro h1 {
+    font-size: 32px; font-weight: 600; line-height: 1.2;
+    margin-bottom: 12px; letter-spacing: -0.01em;
+  }
+  .intro h1 .accent { color: var(--accent); }
+  .intro .subtitle { color: var(--text-muted); font-size: 16px; margin-bottom: 24px; }
+  .intro .lede { color: var(--text); font-size: 15px; margin-bottom: 16px; max-width: 640px; }
+  .intro .meta {
+    display: grid; grid-template-columns: 1fr; gap: 8px;
+    background: var(--bg-card); padding: 18px 22px; border-radius: var(--radius);
+    border: 1px solid var(--border); margin-top: 24px; font-size: 14px;
+  }
+  .intro .meta div { color: var(--text-muted); }
+  .intro .meta div strong { color: var(--text); margin-right: 6px; }
+  .intro .legend { font-size: 13px; color: var(--text-muted); margin-top: 18px; }
+  .intro .legend .badge { margin-right: 6px; }
+  .start-button { margin-top: 28px; }
+
+  /* Section card */
+  .section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .section-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 8px; gap: 12px; flex-wrap: wrap;
+  }
+  .section-step {
+    color: var(--text-dim); font-size: 12px; letter-spacing: 0.16em;
+    text-transform: uppercase; font-weight: 500;
+  }
+  .section-title {
+    font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin-top: 4px;
+  }
+  .section-desc { color: var(--text-muted); font-size: 14px; margin-bottom: 22px; max-width: 560px; }
+
+  /* Question */
+  .question {
+    margin-bottom: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .question:first-of-type { padding-top: 4px; border-top: 0; }
+  .question label.q-label {
+    display: block; font-size: 14px; font-weight: 500;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .q-label .badge {
+    display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px;
+    margin-left: 6px; vertical-align: middle; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .badge.required { background: rgba(232,123,123,0.12); color: var(--error); }
+  .badge.core {
+    background: var(--core-soft); color: var(--core);
+    border: 1px solid rgba(91,158,255,0.2);
+  }
+  .badge.optional { background: rgba(138,148,163,0.12); color: var(--text-muted); }
+  .badge.confidential { background: var(--accent-soft); color: var(--accent); }
+  .q-help { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; max-width: 580px; }
+  .q-help.cite { color: var(--text-dim); font-size: 12px; font-style: italic; }
+
+  input[type="text"], input[type="email"], input[type="number"], select, textarea {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 0; border-color: var(--accent);
+    background: var(--bg-input-focus);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+  select { cursor: pointer; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path fill="%238a94a3" d="M6 8L0 0h12z"/></svg>'); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+  .input-with-suffix { position: relative; }
+  .input-with-suffix .suffix {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); font-size: 13px; pointer-events: none;
+  }
+  .input-with-suffix input { padding-right: 36px; }
+
+  /* Choice groups */
+  .choice-group { display: flex; flex-direction: column; gap: 8px; }
+  .choice-group.horizontal { flex-direction: row; flex-wrap: wrap; gap: 10px; }
+  .choice {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--bg-input); border: 1px solid var(--border);
+    padding: 10px 14px; border-radius: 6px; cursor: pointer;
+    transition: all 0.15s; font-size: 14px;
+  }
+  .choice:hover { border-color: var(--border-strong); background: var(--bg-input-focus); }
+  .choice input { margin-top: 3px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  .choice.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .choice .choice-text { flex: 1; }
+  .choice .choice-desc { display: block; font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Likert */
+  .likert {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+    margin-top: 6px;
+  }
+  .likert label {
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--bg-input); border: 1px solid var(--border);
+    padding: 10px 4px; border-radius: 6px; cursor: pointer;
+    transition: all 0.15s; font-size: 12px; text-align: center;
+    color: var(--text-muted);
+  }
+  .likert label:hover { border-color: var(--border-strong); }
+  .likert label .num { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .likert label.selected { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .likert label.selected .num { color: var(--accent); }
+  .likert input { display: none; }
+  .likert-hint { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-dim); margin-top: 4px; padding: 0 2px; }
+
+  /* Weak/Developing/Strong */
+  .wds {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+    margin-top: 6px;
+  }
+  .wds label {
+    display: flex; flex-direction: column;
+    background: var(--bg-input); border: 1px solid var(--border);
+    padding: 10px 12px; border-radius: 6px; cursor: pointer;
+    transition: all 0.15s; font-size: 13px;
+  }
+  .wds label:hover { border-color: var(--border-strong); }
+  .wds label .wds-title { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .wds label .wds-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+  .wds label.selected { border-color: var(--accent); background: var(--accent-soft); }
+  .wds label.selected .wds-title { color: var(--accent); }
+  .wds input { display: none; }
+
+  /* Buttons */
+  .actions {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; margin-top: 28px; flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 11px 22px; font-size: 14px; font-weight: 500;
+    border-radius: 6px; border: 1px solid transparent;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.15s; gap: 6px;
+  }
+  .btn-primary { background: var(--accent); color: #1a1a1a; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--text-muted); border-color: var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--border-strong); background: var(--bg-input); }
+  .btn-link { background: transparent; color: var(--text-muted); padding: 6px 0; }
+  .btn-link:hover { color: var(--accent); }
+
+  /* Sidebar nav */
+  .layout { display: grid; grid-template-columns: 220px 1fr; gap: 36px; max-width: 1080px; margin: 0 auto; padding: 32px 24px 120px; }
+  .sidebar { position: sticky; top: 90px; align-self: flex-start; }
+  .sidebar-title { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-dim); font-weight: 600; margin-bottom: 12px; }
+  .sidebar-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+  .sidebar-list li {
+    padding: 8px 12px; font-size: 13px; color: var(--text-muted);
+    border-radius: 6px; cursor: pointer; transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .sidebar-list li:hover { color: var(--text); background: var(--bg-card); }
+  .sidebar-list li.current { color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); }
+  .sidebar-list li.done { color: var(--text-dim); }
+  .sidebar-list li.done::before { content: "✓ "; color: var(--success); }
+
+  /* Confirmation */
+  .confirmation { text-align: center; padding: 60px 20px; }
+  .confirmation .checkmark {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--success); color: #0e1218;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700; margin-bottom: 24px;
+  }
+  .confirmation h2 { font-size: 28px; font-weight: 600; margin-bottom: 12px; }
+  .confirmation p { color: var(--text-muted); max-width: 460px; margin: 0 auto 12px; }
+
+  .error-msg { color: var(--error); font-size: 13px; margin-top: 6px; }
+
+  @media (max-width: 880px) {
+    .layout { grid-template-columns: 1fr; gap: 24px; padding: 24px 16px 80px; }
+    .sidebar { position: static; }
+    .sidebar-list { display: flex; flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 4px; }
+    .sidebar-list li { white-space: nowrap; border-left: 0; border-bottom: 2px solid transparent; }
+    .sidebar-list li.current { border-left: 0; border-bottom-color: var(--accent); }
+    .container { padding: 16px 0 80px; }
+    .section { padding: 22px 20px 18px; }
+    .intro h1 { font-size: 26px; }
+    .likert { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+    .likert label { padding: 8px 2px; font-size: 11px; }
+    .wds { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">CATHAY CAPITAL · <strong>AI LEX 2026</strong></div>
+    <div class="save-indicator" id="saveIndicator">Auto-saved locally</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<script>
+/* ============================================================
+ * CONFIG — replace SUBMIT_ENDPOINT with your Formspree URL
+ * Get one for free at https://formspree.io
+ * ============================================================ */
+const CONFIG = {
+  SUBMIT_ENDPOINT: "https://formspree.io/f/REPLACE_ME",
+  EVENT_DATE: "Thursday, June 18, 2026",
+  EVENT_PLACE: "Cathay Capital, 52 rue d'Anjou, Paris 8",
+  CONTACT_EMAIL: "jean-marc.prunet@cathay.fr"
+};
+
+/* ============================================================
+ * ROLE ROUTING
+ * ============================================================ */
+const ROLES = {
+  CEO: "CEO / Founder",
+  CTO: "CTO / VP Engineering",
+  CPO: "CPO / VP Product",
+  CRO: "CRO / VP Sales",
+  CMO: "CMO / Head of Marketing",
+  CFO: "CFO / Head of Finance",
+  COO: "COO / Head of Operations",
+  PEOPLE: "Head of People / HR",
+  OTHER: "Other"
+};
+const ANY = "ANY";
+
+/* ============================================================
+ * QUESTIONNAIRE SCHEMA
+ * Each section has roles[] (which roles see it).
+ * Each question has roles[] too (default = section roles).
+ * Question types: text, textarea, email, number, select,
+ * radio, checkbox, likert5, weak_developing_strong.
+ * Flag .core = true to mark as ongoing portfolio KPI (★).
+ * Flag .confidential = true for Cathay-only restitution.
+ * ============================================================ */
+
+const SCHEMA = [
+  /* SECTION 0 — IDENTIFICATION */
+  {
+    id: "identification",
+    title: "About you",
+    description: "We use this to route the right questions to your role and to organise the co-dev breakouts.",
+    roles: [ANY],
+    questions: [
+      { id: "company", label: "Company", type: "select", required: true,
+        options: ["DiliTrust","EasyVista","Powell","Wedia","Equadis","Onventis","Sunstice","Cathay Capital","External guest","Other"] },
+      { id: "name", label: "Your name", type: "text", required: true, placeholder: "First Last" },
+      { id: "role", label: "Your primary role", type: "select", required: true,
+        options: Object.entries(ROLES).map(([k,v]) => ({ value: k, label: v })),
+        help: "We tailor the questions to your scope. Pick the closest match." },
+      { id: "email", label: "Email (optional)", type: "email",
+        help: "Only used if Cathay needs to follow up on your answers.", optional: true }
+    ]
+  },
+
+  /* SECTION 1 — WHERE YOU STAND (Yelin External 4Q) */
+  {
+    id: "where_you_stand",
+    title: "Where you stand",
+    description: "Four open questions on AI maturity. Adapted from Henry Yelin's external assessment framework. Quick text answers are fine, the goal is to surface what's real today, not to write essays.",
+    roles: [ANY],
+    questions: [
+      { id: "yelin_dau", type: "composite",
+        label: "Daily active user (DAU) adoption of AI tooling in your function. What is your current measurement and number?",
+        help: "Strong answer: quantitative data by tool, by team. Weak answer: 'adoption is great' with no number.",
+        children: [
+          { id: "yelin_dau_text", type: "textarea", placeholder: "e.g. Engineering: 78% DAU on Cursor across 42 devs. Sales: 35% DAU on Clay outreach assistant." },
+          { id: "yelin_dau_self", type: "weak_developing_strong" }
+        ]
+      },
+      { id: "yelin_impact", type: "composite",
+        label: "Where are you starting to see impact from AI tooling in your function?",
+        help: "Strong answer: specific dept-level metrics, e.g. PR throughput +18%, support deflection rate 32%, % new leads auto-generated. Weak answer: 'we move much faster'.",
+        children: [
+          { id: "yelin_impact_text", type: "textarea", placeholder: "e.g. PR throughput +22% YoY since Q3 2025; CS Tier 1 deflection at 38%." },
+          { id: "yelin_impact_self", type: "weak_developing_strong" }
+        ]
+      },
+      { id: "yelin_value", type: "composite",
+        label: "What new value or cost savings will you deliver by end of 2026 from AI?",
+        help: "Strong answer: links AI impact to business value (revenue, features shipped, costs saved). Weak answer: no value or value qualitative and uncommitted.",
+        children: [
+          { id: "yelin_value_text", type: "textarea", placeholder: "e.g. €1.2m new ARR from AI premium module; €600k OPEX saved on CS; -2.5 FTE on QA." },
+          { id: "yelin_value_self", type: "weak_developing_strong" }
+        ]
+      },
+      { id: "yelin_headcount", type: "composite",
+        label: "How does your AI product strategy account for AI's impact on your customers' headcount?",
+        help: "Strong answer: AI features aligned with customer labour replacement model with clear path to value. Weak answer: features that are technically cool but disconnected from customer value.",
+        roles: ["CEO","CPO","CTO"],
+        children: [
+          { id: "yelin_headcount_text", type: "textarea", placeholder: "e.g. our agentic redlining replaces ~0.4 FTE of paralegal work per customer. We are repricing accordingly." },
+          { id: "yelin_headcount_self", type: "weak_developing_strong" }
+        ]
+      }
+    ]
+  },
+
+  /* SECTION 2 — ENGINEERING PRODUCTIVITY */
+  {
+    id: "engineering",
+    title: "Engineering productivity",
+    description: "Adopt → Impact → Value. Skip metrics you do not yet measure, but flag if it is on your near-term roadmap.",
+    roles: ["CTO","CPO","CEO"],
+    questions: [
+      { id: "eng_tools", type: "checkbox", label: "AI coding tools deployed",
+        options: ["GitHub Copilot","Cursor","Claude Code","Windsurf","Cody (Sourcegraph)","Codeium / Continue","JetBrains AI","Other / In-house","None yet"] },
+      { id: "eng_licensed_pct", type: "number", suffix: "%", core: true,
+        label: "% of engineers with an active AI coding licence",
+        help: "Adopt-stage metric. Active licence, not just provisioned." },
+      { id: "eng_dau_pct", type: "number", suffix: "%", core: true,
+        label: "Daily Active Users on AI coding tool over last 30 days (% of engineers)",
+        help: "Adopt-stage metric. The leading indicator of fluency." },
+      { id: "eng_pr_change", type: "text", core: true,
+        label: "Change in PR throughput since AI tools introduction",
+        help: "Impact-stage. e.g. +18% YoY, +22 vs T-12m. Estimate is fine.", placeholder: "+x% / not measured" },
+      { id: "eng_cycle_change", type: "text",
+        label: "Change in SDLC cycle time since AI tools introduction",
+        placeholder: "e.g. -15% / not measured" },
+      { id: "eng_onboard_change", type: "text", core: true,
+        label: "Change in time-to-onboard a new engineer",
+        help: "EasyVista reported 62% faster onboarding. Where are you?", placeholder: "e.g. -30% / from 12w to 8w" },
+      { id: "eng_dora", type: "radio", label: "DORA metrics in place?",
+        options: [
+          { value: "full", label: "Yes, all four (deploy freq, lead time, MTTR, change failure rate) tracked" },
+          { value: "partial", label: "Partial (some tracked)" },
+          { value: "no", label: "No formal DORA tracking" }
+        ]
+      },
+      { id: "eng_value_text", type: "textarea",
+        label: "Value-stage: any AI-attributable outcome (features shipped, tech debt reduced, defects remediated)",
+        help: "Move beyond Impact. What did AI enable that translated into real business value?", placeholder: "free text" },
+      { id: "eng_share_win", type: "textarea",
+        label: "One concrete engineering AI win you would be happy to share with peers",
+        placeholder: "1-3 sentences" }
+    ]
+  },
+
+  /* SECTION 3 — GTM AI ADOPTION */
+  {
+    id: "gtm",
+    title: "GTM AI adoption",
+    description: "Outbound, inbound, customer support, customer success. Same logic: where are you, what works, what is open.",
+    roles: ["CRO","CMO","CEO"],
+    questions: [
+      { id: "gtm_outbound_pct", type: "number", suffix: "%",
+        label: "% of outbound activity AI-powered (drafting, targeting, sequencing)",
+        help: "Active AI assistance, not just enrichment." },
+      { id: "gtm_lead_mix", type: "text",
+        label: "Inbound vs Outbound lead mix today",
+        placeholder: "e.g. 70% inbound, 30% outbound" },
+      { id: "gtm_sales_tools", type: "checkbox", label: "AI tools deployed in sales / marketing",
+        options: ["Apollo / ZoomInfo","Clay","Outreach AI / Salesloft Rhythm","Gong","Lavender","11x.ai (Alice/Mike)","Cognism","HubSpot AI","Salesforce Einstein","Other","None yet"] },
+      { id: "gtm_lead_scoring", type: "radio", label: "AI-driven lead scoring in place?",
+        options: ["Yes, in production","Building","No"] },
+      { id: "gtm_cs_deflection", type: "number", suffix: "%", core: true,
+        label: "Customer support deflection rate via AI (Tier 1 tickets resolved without human)",
+        help: "Calmejane and McKinsey both quote 40-50% as the credible target. Where are you?" },
+      { id: "gtm_kb", type: "radio", label: "AI-queryable centralised knowledge base?",
+        options: [
+          { value: "yes", label: "Yes, in production with measurable coverage" },
+          { value: "building", label: "Building" },
+          { value: "no", label: "No" }
+        ]
+      },
+      { id: "gtm_kb_coverage", type: "number", suffix: "% coverage",
+        label: "If KB in production, estimated coverage of org's tribal knowledge",
+        optional: true },
+      { id: "gtm_share_win", type: "textarea",
+        label: "One concrete GTM AI win you would be happy to share with peers",
+        placeholder: "1-3 sentences" }
+    ]
+  },
+
+  /* SECTION 4 — PRODUCT AI STRATEGY */
+  {
+    id: "product",
+    title: "Product AI strategy",
+    description: "Where your product sits in the System of Record vs System of Action shift. The strategic question, in your own framing.",
+    roles: ["CEO","CPO","CTO"],
+    questions: [
+      { id: "prod_sor_soa", type: "radio",
+        label: "How would you characterise your product today on the SoR ↔ SoA continuum?",
+        help: "SoR = System of Record (data and audit). SoA = System of Action (where work happens, increasingly agentic).",
+        options: [
+          { value: "sor_pure", label: "Mostly SoR, no SoA layer yet" },
+          { value: "sor_copilot", label: "SoR with Copilot overlays (assist mode)" },
+          { value: "sor_wedge", label: "SoR + Wedge agents owning a job end to end" },
+          { value: "sor_orchestrator", label: "SoR + Orchestrator agents executing across systems" },
+          { value: "sentinel", label: "Sentinel pattern: monitor / detect / escalate across SoRs" },
+          { value: "soa_native", label: "We are an AI-native System of Action from the start" }
+        ]
+      },
+      { id: "prod_overlay_type", type: "checkbox",
+        label: "Type(s) of agentic overlay you are building or deploying",
+        help: "Multiple selections OK if you have several plays.",
+        options: [
+          "Copilot (assist within a workflow)",
+          "Wedge (own one job end to end)",
+          "Sentinel (monitor / detect / escalate)",
+          "Orchestrator (execute across systems)",
+          "None yet"
+        ]
+      },
+      { id: "prod_acv_ai_pct", type: "number", suffix: "% of ACV", core: true,
+        label: "% of ACV today coming from AI-priced or AI-bundled features",
+        help: "Either explicitly priced AI add-ons or AI features bundled into the core SKU at a clearly higher price point." },
+      { id: "prod_attach_rate", type: "number", suffix: "%", core: true,
+        label: "AI customer attach rate (% customers actively using ≥1 AI feature in last 30d)",
+        help: "Engagement, not just licence. This is the proxy for whether AI is becoming sticky." },
+      { id: "prod_pricing_today", type: "text",
+        label: "Pricing model mix today (seat-based vs hybrid vs outcome / value-based, in %)",
+        placeholder: "e.g. 80% seat, 15% usage, 5% outcome" },
+      { id: "prod_pricing_target", type: "text",
+        label: "Target mix end of 2026",
+        placeholder: "e.g. 50% seat, 30% usage, 20% outcome" },
+      { id: "prod_competitor", type: "textarea",
+        label: "Biggest AI-native competitive threat in your category — name them",
+        help: "We will treat this as confidential intel. Cathay won't share name attribution at the after-work."
+      },
+      { id: "prod_roadmap_share", type: "textarea",
+        label: "One AI product bet on your roadmap you would be happy to discuss with peers",
+        placeholder: "1-3 sentences" }
+    ]
+  },
+
+  /* SECTION 5 — FOUNDATIONS & ORG */
+  {
+    id: "foundations",
+    title: "Foundations & org",
+    description: "Calmejane's six readiness dimensions, condensed. Plus the failure modes you have already encountered. Self-rate honestly — under-rating is fine.",
+    roles: ["CEO","CTO","COO"],
+    questions: [
+      { id: "found_data", type: "likert5",
+        label: "Data quality & governance for AI",
+        help: "1 = limited and unstructured. 5 = clean, governed, real-time accessible by agents." },
+      { id: "found_platform", type: "likert5",
+        label: "AI platform / orchestration capability",
+        help: "Ability to orchestrate multiple models, version them, supervise them." },
+      { id: "found_process", type: "likert5",
+        label: "Process architecture (decomposition into task graphs)",
+        help: "Pre-condition for agentification. Without it, you cannot deploy agents reliably." },
+      { id: "found_governance", type: "likert5",
+        label: "AI governance & risk framework (incl. EU AI Act)",
+        help: "Who decides what an agent can do? Who is accountable on errors? Are use cases classified by risk?" },
+      { id: "found_org", type: "likert5",
+        label: "Org design (transformation function, redefined roles, supervision)",
+        help: "5 = dedicated AI / transformation lead at exco level, roles redefined." },
+      { id: "found_multimodal", type: "likert5",
+        label: "Multimodal capability (voice, image, document, structured data unified)",
+        help: "Optional for some categories; central for others." },
+      { id: "found_failures", type: "checkbox",
+        label: "Failure modes you have already encountered (multi-select)",
+        help: "Adapted from Calmejane's '7 Failure Modes'. Naming them publicly accelerates learning across the portfolio.",
+        options: [
+          "Shadow agents — teams deploying agents outside governance",
+          "Autonomy without evidence — agents given autonomy before reliability proven",
+          "Dual running pitfall — old + new in parallel for too long",
+          "Data debt — shortcuts that compound as you scale",
+          "Governance afterthought — gov defined too late",
+          "Tool sprawl — incompatible frameworks proliferating",
+          "Change without decommissioning — adding agents without retiring old processes",
+          "None encountered yet"
+        ]
+      },
+      { id: "found_phase", type: "radio", core: true,
+        label: "Where do you sit on the deployment phases?",
+        help: "Adapted from Calmejane's 4-phase model.",
+        options: [
+          { value: "foundation", label: "Phase 1 — Foundation: readiness assessment, data and gov fundamentals, no agent in production" },
+          { value: "pilot", label: "Phase 2 — Pilot: 2-3 use cases at controlled scope, dual running" },
+          { value: "industrialize", label: "Phase 3 — Industrialize: scaled deployment in one full domain" },
+          { value: "scale", label: "Phase 4 — Scale: multi-domain, recommissioning historical processes, ROI capture" }
+        ]
+      },
+      { id: "found_lead", type: "radio",
+        label: "Dedicated AI / transformation lead?",
+        options: [
+          "Chief Transformation Officer (or equivalent) at exco level",
+          "AI lead reporting to CEO or CTO",
+          "Distributed across CTO / CPO / CDO with no single owner",
+          "None today",
+          "Building / hiring"
+        ]
+      },
+      { id: "found_workforce_pct", type: "number", suffix: "%", core: true,
+        label: "% of workforce with active enterprise LLM access (Copilot, ChatGPT Enterprise, Claude, Gemini, etc.)",
+        help: "Active access, not just provisioned. Cathay's view: under 50% in 2026 is a leading concern." }
+      ]
+  },
+
+  /* SECTION 6 — INTERNAL FINANCIAL KPIs */
+  {
+    id: "financial",
+    title: "Internal AI assessment KPIs",
+    description: "Optional. Cathay-only, anonymised in restitution. We will aggregate to ranges, never name a company on a number. Skip any field you cannot or do not want to share.",
+    roles: ["CEO","CFO","COO"],
+    confidential: true,
+    questions: [
+      { id: "fin_rd_pct", type: "number", suffix: "% of revenue",
+        label: "R&D spend as % of revenue (LTM)",
+        help: "Higher ratio = more to gain from AI productivity improvement.", optional: true },
+      { id: "fin_eng_hc_pct", type: "number", suffix: "%",
+        label: "Engineering headcount as % of total HC", optional: true },
+      { id: "fin_rev_per_eng", type: "number", suffix: "€",
+        label: "Revenue per engineer (LTM, €)", optional: true },
+      { id: "fin_arr_growth", type: "number", suffix: "% YoY",
+        label: "ARR YoY growth (LTM)", optional: true },
+      { id: "fin_nrr", type: "number", suffix: "%",
+        label: "Net Revenue Retention (NRR)", optional: true },
+      { id: "fin_gm", type: "number", suffix: "%", core: true,
+        label: "Gross margin (LTM, %)",
+        help: "The line where AI inference cost will start to bite." },
+      { id: "fin_gm_change", type: "text", core: true,
+        label: "Gross margin change vs prior LTM",
+        placeholder: "e.g. -1.2pp / +0.8pp" },
+      { id: "fin_inference_cost", type: "number", suffix: "% of revenue", core: true,
+        label: "AI / inference cost as % of revenue",
+        help: "Best estimate. The new line in the SaaS P&L." },
+      { id: "fin_rule40", type: "number", suffix: "(rule of 40)",
+        label: "Rule of 40 score (growth % + EBITDA margin %)", optional: true },
+      { id: "fin_cac_payback", type: "number", suffix: "months",
+        label: "CAC payback (months)", optional: true },
+      { id: "fin_ltv_cac", type: "number", suffix: "× ratio",
+        label: "LTV / CAC", optional: true },
+      { id: "fin_pipeline_coverage", type: "number", suffix: "× quota",
+        label: "Pipeline coverage ratio (current quarter)", optional: true },
+      { id: "fin_fte_saved", type: "text", core: true,
+        label: "AI-attributed FTE-equivalent saved across the company (estimate)",
+        help: "Across engineering, GTM, support, ops. Best estimate, no false precision needed.",
+        placeholder: "e.g. ~8 FTE total, of which 3.5 in engineering" },
+      { id: "fin_agents_in_prod", type: "number",
+        label: "Number of AI agents in production with autonomous or semi-autonomous decision authority", optional: true }
+    ]
+  },
+
+  /* SECTION 7 — SHARE & LEARN */
+  {
+    id: "share_learn",
+    title: "Share & learn",
+    description: "This is what we asked you for in the invitation: what you would happily share with peers, and what you would love to learn. Drives the breakouts.",
+    roles: [ANY],
+    questions: [
+      { id: "share_topics", type: "textarea", required: true,
+        label: "Top 3 things you would happily share with peers",
+        help: "Bullet list is fine. Be specific (a tool, a metric, a process, a failure).",
+        placeholder: "1. ...\n2. ...\n3. ..." },
+      { id: "learn_topics", type: "textarea", required: true,
+        label: "Top 3 things you would love to learn from peers",
+        placeholder: "1. ...\n2. ...\n3. ..." },
+      { id: "breakout_themes", type: "checkbox", required: true,
+        label: "Pick 2 to 3 breakout themes that interest you most",
+        help: "Drives the co-dev groups composition.",
+        options: [
+          "AI coding tools — deployment, measurement, fluency tactics",
+          "AI product strategy — SoR/SoA, overlay typology, pricing transformation",
+          "AI outbound & SDR automation",
+          "AI customer support & deflection",
+          "AI knowledge management & enablement",
+          "Foundations — data, governance, EU AI Act",
+          "People & change — roles, training, champions, decommissioning",
+          "Business model & pricing — from seat to outcome",
+          "Build vs partner vs acquire — M&A and tech bets"
+        ]
+      },
+      { id: "deep_dive_peers", type: "checkbox",
+        label: "Specific portfolio companies you would most like to deep-dive with",
+        help: "Optional. We use this for breakout seating, not for any other purpose.",
+        options: ["DiliTrust","EasyVista","Powell","Wedia","Equadis","Onventis","Sunstice","No preference"] },
+      { id: "keynote_question", type: "textarea",
+        label: "One question you would want answered in the Patrick Marous keynote Q&A or in plenary",
+        placeholder: "Open." }
+    ]
+  }
+];
+
+/* ============================================================
+ * STATE
+ * ============================================================ */
+const STORAGE_KEY = "ai_lex_2026_responses_v1";
+const state = {
+  step: 0,                    // 0 = intro, then 1..N = sections, N+1 = confirmation
+  answers: {},
+  visibleSections: [],
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    Object.assign(state, parsed);
+    state.step = state.step || 0;
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch(e) {}
+  flashSaveIndicator();
+}
+function clearState() { localStorage.removeItem(STORAGE_KEY); }
+
+let saveTimer;
+function flashSaveIndicator() {
+  const el = document.getElementById('saveIndicator');
+  if (!el) return;
+  el.textContent = "Saved";
+  el.classList.add('saved');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    el.textContent = "Auto-saved locally";
+    el.classList.remove('saved');
+  }, 1200);
+}
+
+/* ============================================================
+ * ROLE FILTERING
+ * ============================================================ */
+function sectionVisibleForRole(section, role) {
+  if (!section.roles || section.roles.includes(ANY)) return true;
+  if (!role) return true;
+  return section.roles.includes(role);
+}
+function questionVisibleForRole(question, sectionRoles, role) {
+  const roles = question.roles || sectionRoles;
+  if (!roles || roles.includes(ANY)) return true;
+  if (!role) return true;
+  return roles.includes(role);
+}
+function computeVisibleSections() {
+  const role = state.answers.role || null;
+  return SCHEMA.filter(s => sectionVisibleForRole(s, role));
+}
+
+/* ============================================================
+ * RENDERING
+ * ============================================================ */
+const $ = (sel, root=document) => root.querySelector(sel);
+
+function render() {
+  state.visibleSections = computeVisibleSections();
+  const main = document.getElementById('main');
+  if (state.step === 0) {
+    main.innerHTML = renderIntro();
+    bindIntro();
+  } else if (state.step > state.visibleSections.length) {
+    main.innerHTML = renderConfirmation();
+  } else {
+    main.innerHTML = renderForm();
+    bindForm();
+  }
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderIntro() {
+  return `
+    <div class="container intro">
+      <h1>AI LEX 2026 <span class="accent">/ Pre-event questionnaire</span></h1>
+      <p class="subtitle">Cathay Capital · B2B SaaS portfolio peer-learning session</p>
+
+      <p class="lede">Following our SF AI trip, we are gathering the leadership teams of our seven B2B SaaS portfolio companies for an afternoon of peer learning and co-dev on AI transformation. To make the session genuinely useful, we are asking you to share, ahead of the day, what you have already deployed, what you have learned, and what you would like to learn from your peers.</p>
+
+      <p class="lede">This questionnaire is routed to your role, takes around 10 to 15 minutes, and saves your progress locally so you can pause and resume in the same browser. Cathay will produce an anonymised restitution. Confidential numbers (the optional financial section) are seen only by Cathay and never attributed to a named company.</p>
+
+      <div class="meta">
+        <div><strong>Event</strong>${CONFIG.EVENT_DATE} · 4:00 pm to 9:30 pm</div>
+        <div><strong>Place</strong>${CONFIG.EVENT_PLACE}</div>
+        <div><strong>Format</strong>Virtual keynote, plenary, co-dev breakouts, cocktail on the terrace</div>
+        <div><strong>Keynote</strong>Patrick Marous — Global CEO Business Unit Solutions, Thyssenkrupp Materials Services</div>
+      </div>
+
+      <p class="legend">
+        <span class="badge core">★ Core KPI</span> = metric Cathay will track quarterly across the portfolio post-event. &nbsp;&nbsp;
+        <span class="badge confidential">CATHAY ONLY</span> = financial section, anonymised restitution. &nbsp;&nbsp;
+        <span class="badge optional">Optional</span> = skip if not measured today.
+      </p>
+
+      <button class="btn btn-primary start-button" id="startBtn">Start the questionnaire</button>
+      ${state.answers && Object.keys(state.answers).length > 0 ? `
+        <button class="btn btn-link" id="resetBtn" style="margin-left: 12px;">Reset saved answers</button>
+      ` : ''}
+    </div>
+  `;
+}
+
+function bindIntro() {
+  $('#startBtn').addEventListener('click', () => {
+    state.step = 1;
+    saveState();
+    render();
+  });
+  const reset = $('#resetBtn');
+  if (reset) reset.addEventListener('click', () => {
+    if (confirm("Reset all your saved answers? This cannot be undone.")) {
+      state.answers = {};
+      state.step = 0;
+      clearState();
+      render();
+    }
+  });
+}
+
+function renderForm() {
+  const sections = state.visibleSections;
+  const idx = state.step - 1;
+  const section = sections[idx];
+  const role = state.answers.role || null;
+
+  // Sidebar
+  const sidebar = `
+    <aside class="sidebar">
+      <div class="sidebar-title">Sections</div>
+      <ul class="sidebar-list">
+        ${sections.map((s, i) => `
+          <li class="${i === idx ? 'current' : (i < idx ? 'done' : '')}" data-jump="${i+1}">
+            ${i+1}. ${s.title}
+          </li>
+        `).join('')}
+      </ul>
+    </aside>
+  `;
+
+  // Section
+  const visibleQuestions = (section.questions || []).filter(q => questionVisibleForRole(q, section.roles, role));
+  const isLast = idx === sections.length - 1;
+
+  const sectionHtml = `
+    <section class="section" data-section="${section.id}">
+      <div class="section-header">
+        <div>
+          <div class="section-step">Section ${idx+1} of ${sections.length}${section.confidential ? ' · ' : ''}${section.confidential ? '<span class="badge confidential">CATHAY ONLY</span>' : ''}</div>
+          <div class="section-title">${section.title}</div>
+        </div>
+      </div>
+      <div class="section-desc">${section.description}</div>
+      ${visibleQuestions.map(q => renderQuestion(q)).join('')}
+      <div class="actions">
+        <button class="btn btn-ghost" id="prevBtn" ${idx === 0 ? 'disabled' : ''}>← Back</button>
+        <button class="btn btn-primary" id="nextBtn">${isLast ? 'Submit answers →' : 'Next →'}</button>
+      </div>
+      <div class="error-msg" id="errorMsg"></div>
+    </section>
+  `;
+
+  return `
+    <div class="layout">
+      ${sidebar}
+      <div class="container" style="padding-top: 0;">${sectionHtml}</div>
+    </div>
+  `;
+}
+
+function renderQuestion(q) {
+  const value = state.answers[q.id];
+  const requiredBadge = q.required ? `<span class="badge required">REQUIRED</span>` : '';
+  const coreBadge = q.core ? `<span class="badge core">★ CORE KPI</span>` : '';
+  const optBadge = q.optional ? `<span class="badge optional">OPTIONAL</span>` : '';
+  const help = q.help ? `<div class="q-help">${q.help}</div>` : '';
+
+  let body = '';
+  if (q.type === 'composite') {
+    body = (q.children || []).map(c => renderQuestion(Object.assign({}, c))).join('');
+  } else if (q.type === 'text' || q.type === 'email') {
+    body = `<input type="${q.type}" id="q_${q.id}" value="${escapeAttr(value || '')}" placeholder="${escapeAttr(q.placeholder || '')}">`;
+  } else if (q.type === 'number') {
+    if (q.suffix) {
+      body = `<div class="input-with-suffix">
+        <input type="number" id="q_${q.id}" value="${escapeAttr(value || '')}" placeholder="${escapeAttr(q.placeholder || '')}" step="any">
+        <span class="suffix">${escapeHTML(q.suffix)}</span>
+      </div>`;
+    } else {
+      body = `<input type="number" id="q_${q.id}" value="${escapeAttr(value || '')}" placeholder="${escapeAttr(q.placeholder || '')}" step="any">`;
+    }
+  } else if (q.type === 'textarea') {
+    body = `<textarea id="q_${q.id}" placeholder="${escapeAttr(q.placeholder || '')}">${escapeHTML(value || '')}</textarea>`;
+  } else if (q.type === 'select') {
+    const opts = q.options || [];
+    body = `<select id="q_${q.id}">
+      <option value="">— choose —</option>
+      ${opts.map(o => {
+        const v = (typeof o === 'object') ? o.value : o;
+        const l = (typeof o === 'object') ? o.label : o;
+        return `<option value="${escapeAttr(v)}" ${value === v ? 'selected' : ''}>${escapeHTML(l)}</option>`;
+      }).join('')}
+    </select>`;
+  } else if (q.type === 'radio') {
+    const opts = q.options || [];
+    body = `<div class="choice-group">
+      ${opts.map(o => {
+        const v = (typeof o === 'object') ? o.value : o;
+        const l = (typeof o === 'object') ? o.label : o;
+        const sel = value === v;
+        return `<label class="choice ${sel ? 'selected' : ''}">
+          <input type="radio" name="q_${q.id}" value="${escapeAttr(v)}" ${sel ? 'checked' : ''}>
+          <span class="choice-text">${escapeHTML(l)}</span>
+        </label>`;
+      }).join('')}
+    </div>`;
+  } else if (q.type === 'checkbox') {
+    const opts = q.options || [];
+    const arr = Array.isArray(value) ? value : [];
+    body = `<div class="choice-group">
+      ${opts.map(o => {
+        const v = (typeof o === 'object') ? o.value : o;
+        const l = (typeof o === 'object') ? o.label : o;
+        const sel = arr.includes(v);
+        return `<label class="choice ${sel ? 'selected' : ''}">
+          <input type="checkbox" name="q_${q.id}" value="${escapeAttr(v)}" ${sel ? 'checked' : ''}>
+          <span class="choice-text">${escapeHTML(l)}</span>
+        </label>`;
+      }).join('')}
+    </div>`;
+  } else if (q.type === 'likert5') {
+    const labels = ["Not started","Initial","Developing","Established","Industrialised"];
+    body = `<div class="likert">
+      ${[1,2,3,4,5].map(n => {
+        const sel = String(value) === String(n);
+        return `<label class="${sel ? 'selected' : ''}">
+          <input type="radio" name="q_${q.id}" value="${n}" ${sel ? 'checked' : ''}>
+          <span class="num">${n}</span>
+          <span>${labels[n-1]}</span>
+        </label>`;
+      }).join('')}
+    </div>
+    <div class="likert-hint"><span>1 = not started</span><span>5 = industrialised</span></div>`;
+  } else if (q.type === 'weak_developing_strong') {
+    const opts = [
+      { v: 'weak', t: 'Weak', d: "No data, qualitative claim only" },
+      { v: 'developing', t: 'Developing', d: "Some data, partial coverage" },
+      { v: 'strong', t: 'Strong', d: "Quantitative, attributable, dept-level" }
+    ];
+    body = `<div class="wds">
+      ${opts.map(o => {
+        const sel = value === o.v;
+        return `<label class="${sel ? 'selected' : ''}">
+          <input type="radio" name="q_${q.id}" value="${o.v}" ${sel ? 'checked' : ''}>
+          <span class="wds-title">${o.t}</span>
+          <span class="wds-desc">${o.d}</span>
+        </label>`;
+      }).join('')}
+    </div>`;
+  }
+
+  if (q.type === 'composite') {
+    return `<div class="question">
+      <div class="q-label">${escapeHTML(q.label)} ${requiredBadge}${coreBadge}${optBadge}</div>
+      ${help}
+      ${body}
+    </div>`;
+  }
+
+  if (q.label) {
+    return `<div class="question">
+      <label class="q-label" for="q_${q.id}">${escapeHTML(q.label)} ${requiredBadge}${coreBadge}${optBadge}</label>
+      ${help}
+      ${body}
+    </div>`;
+  } else {
+    return `<div class="question" style="padding-top: 0; border-top: 0; margin-top: -10px;">${body}</div>`;
+  }
+}
+
+function bindForm() {
+  // Listen to all changes within form
+  const main = document.getElementById('main');
+  main.addEventListener('input', e => onInputChange(e), true);
+  main.addEventListener('change', e => onInputChange(e), true);
+
+  $('#prevBtn').addEventListener('click', () => {
+    if (state.step > 1) {
+      state.step--;
+      saveState();
+      render();
+    }
+  });
+  $('#nextBtn').addEventListener('click', onNext);
+
+  // Sidebar jump
+  document.querySelectorAll('[data-jump]').forEach(el => {
+    el.addEventListener('click', () => {
+      const target = parseInt(el.getAttribute('data-jump'), 10);
+      if (target <= state.step || canSkipForward(target)) {
+        state.step = target;
+        saveState();
+        render();
+      }
+    });
+  });
+}
+
+function canSkipForward(target) {
+  // Allow only sequential progression to avoid skipping required questions
+  return false;
+}
+
+function onInputChange(e) {
+  const t = e.target;
+  const id = (t.id || t.name || '').replace(/^q_/, '');
+  if (!id) return;
+  const idx = state.step - 1;
+  const section = state.visibleSections[idx];
+  if (!section) return;
+
+  if (t.type === 'checkbox') {
+    const arr = Array.isArray(state.answers[id]) ? state.answers[id].slice() : [];
+    if (t.checked && !arr.includes(t.value)) arr.push(t.value);
+    if (!t.checked) {
+      const i = arr.indexOf(t.value);
+      if (i >= 0) arr.splice(i, 1);
+    }
+    state.answers[id] = arr;
+    // Visual selection update
+    const label = t.closest('.choice');
+    if (label) label.classList.toggle('selected', t.checked);
+  } else if (t.type === 'radio') {
+    state.answers[id] = t.value;
+    // Toggle selected class
+    document.querySelectorAll(`input[name="${t.name}"]`).forEach(ip => {
+      const lab = ip.closest('label');
+      if (lab) lab.classList.toggle('selected', ip.checked);
+    });
+  } else {
+    state.answers[id] = t.value;
+  }
+  saveState();
+  // Recompute visible sections if role changed
+  if (id === 'role') {
+    state.visibleSections = computeVisibleSections();
+    updateProgress();
+  }
+}
+
+function onNext() {
+  const idx = state.step - 1;
+  const section = state.visibleSections[idx];
+  const errors = validateSection(section);
+  if (errors.length > 0) {
+    $('#errorMsg').textContent = errors[0];
+    return;
+  }
+  $('#errorMsg').textContent = '';
+  if (idx === state.visibleSections.length - 1) {
+    submit();
+    return;
+  }
+  state.step++;
+  saveState();
+  render();
+}
+
+function validateSection(section) {
+  const role = state.answers.role || null;
+  const errors = [];
+  for (const q of (section.questions || [])) {
+    if (!questionVisibleForRole(q, section.roles, role)) continue;
+    const val = state.answers[q.id];
+    if (q.required) {
+      const empty = (val === undefined || val === null || val === '' || (Array.isArray(val) && val.length === 0));
+      if (empty) {
+        errors.push(`Required: "${q.label}".`);
+        return errors;
+      }
+    }
+    if (q.type === 'composite' && q.children) {
+      for (const c of q.children) {
+        if (c.required && !state.answers[c.id]) {
+          errors.push(`Required: "${q.label}".`);
+          return errors;
+        }
+      }
+    }
+  }
+  return errors;
+}
+
+async function submit() {
+  const btn = $('#nextBtn');
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
+  try {
+    const payload = {
+      _subject: `AI LEX 2026 — ${state.answers.company || 'Unknown'} — ${state.answers.name || 'Unknown'}`,
+      submittedAt: new Date().toISOString(),
+      answers: state.answers
+    };
+    const res = await fetch(CONFIG.SUBMIT_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const t = await res.text().catch(() => '');
+      throw new Error(`HTTP ${res.status}: ${t.slice(0, 200)}`);
+    }
+    state.step = state.visibleSections.length + 1;
+    clearState();
+    render();
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = "Submit answers →";
+    $('#errorMsg').textContent = `Submission failed. ${err.message}. Your answers are saved locally — you can retry.`;
+  }
+}
+
+function renderConfirmation() {
+  return `
+    <div class="container">
+      <div class="confirmation">
+        <div class="checkmark">✓</div>
+        <h2>Thank you</h2>
+        <p>Your answers have been submitted. We will use them to shape the breakout sessions on June 18 and to feed the consolidated portfolio benchmarks.</p>
+        <p>Anything you would like to add later? Email <a href="mailto:${CONFIG.CONTACT_EMAIL}">${CONFIG.CONTACT_EMAIL}</a>.</p>
+        <p style="margin-top: 28px;"><button class="btn btn-ghost" onclick="window.location.reload()">Submit another response</button></p>
+      </div>
+    </div>
+  `;
+}
+
+function updateProgress() {
+  const total = state.visibleSections.length || 1;
+  const pct = state.step === 0 ? 0 : Math.min(100, Math.round((state.step - 1) / total * 100) + (state.step > total ? 100 : 0));
+  document.getElementById('progressFill').style.width = (state.step > total ? 100 : pct) + '%';
+}
+
+/* ============================================================
+ * UTILS
+ * ============================================================ */
+function escapeHTML(s) {
+  if (s === undefined || s === null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+}
+function escapeAttr(s) { return escapeHTML(s); }
+
+/* ============================================================
+ * BOOT
+ * ============================================================ */
+loadState();
+state.visibleSections = computeVisibleSections();
+render();
+</script>
+</body>
+</html>
