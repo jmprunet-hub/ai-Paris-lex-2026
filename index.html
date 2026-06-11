@@ -85,6 +85,7 @@
   }
   .intro .meta div { color: var(--text-muted); }
   .intro .meta div strong { color: var(--text); margin-right: 6px; }
+  .intro .meta .meta-title { color: var(--accent); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
   .intro .legend { font-size: 13px; color: var(--text-muted); margin-top: 18px; }
   .intro .legend .badge { margin-right: 6px; }
   .start-button { margin-top: 28px; }
@@ -122,6 +123,12 @@
     display: block; font-size: 14px; font-weight: 500;
     color: var(--text); margin-bottom: 6px;
   }
+  .q-subhead {
+    margin-top: 26px; padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600;
+  }
   .q-label .badge {
     display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px;
     margin-left: 6px; vertical-align: middle; font-weight: 600;
@@ -135,7 +142,6 @@
   .badge.optional { background: rgba(138,148,163,0.12); color: var(--text-muted); }
   .badge.confidential { background: var(--accent-soft); color: var(--accent); }
   .q-help { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; max-width: 580px; }
-  .q-help.cite { color: var(--text-dim); font-size: 12px; font-style: italic; }
 
   input[type="text"], input[type="email"], input[type="number"], select, textarea {
     width: 100%;
@@ -294,43 +300,48 @@
 <script>
 /* ============================================================
  * CONFIG — replace SUBMIT_ENDPOINT with your Formspree URL
- * Get one for free at https://formspree.io
+ * (reuse the endpoint already configured in the deployed v1)
  * ============================================================ */
 const CONFIG = {
   SUBMIT_ENDPOINT: "https://formspree.io/f/mpqbojaz",
   EVENT_DATE: "Thursday, June 18, 2026",
   EVENT_PLACE: "Cathay Capital, 52 rue d'Anjou, Paris 8",
+  DEADLINE: "Monday, June 15, end of day",
   CONTACT_EMAIL: "jean-marc.prunet@cathay.fr"
 };
 
 /* ============================================================
- * ROLE ROUTING
+ * ROLES → COMMUNITIES
+ * Routing follows the six event communities.
  * ============================================================ */
-const ROLES = {
-  CEO: "CEO / Founder",
-  CTO: "CTO / VP Engineering",
-  CPO: "CPO / VP Product",
-  CRO: "CRO / VP Sales",
-  CMO: "CMO / Head of Marketing",
-  CFO: "CFO / Head of Finance",
-  COO: "COO / Head of Operations",
-  PEOPLE: "Head of People / HR",
-  OTHER: "Other"
+const ROLE_OPTIONS = [
+  { value: "CEO",   label: "CEO / Founder / Chairman" },
+  { value: "CTO",   label: "CTO / VP Engineering / AI Lead" },
+  { value: "CPO",   label: "CPO / Head of Product" },
+  { value: "CRO",   label: "CRO / Head of Sales" },
+  { value: "CMO",   label: "CMO / Head of Marketing" },
+  { value: "CS",    label: "Customer Success / Services / Support" },
+  { value: "CFO",   label: "CFO / Finance / Operations" },
+  { value: "HR",    label: "HR / People" },
+  { value: "OTHER", label: "Other" }
+];
+const ROLE_TO_COMMUNITY = {
+  CEO: "CEO", CTO: "TECH", CPO: "TECH", CRO: "GTM", CMO: "GTM",
+  CS: "CS", CFO: "FIN", HR: "HR", OTHER: "OTHER"
 };
 const ANY = "ANY";
+function communityOf(role) { return ROLE_TO_COMMUNITY[role] || null; }
 
 /* ============================================================
- * QUESTIONNAIRE SCHEMA
- * Each section has roles[] (which roles see it).
- * Each question has roles[] too (default = section roles).
- * Question types: text, textarea, email, number, select,
- * radio, checkbox, likert5, weak_developing_strong.
- * Flag .core = true to mark as ongoing portfolio KPI (★).
- * Flag .confidential = true for Cathay-only restitution.
+ * QUESTIONNAIRE SCHEMA v2
+ * Each section / question has roles[] of COMMUNITY codes
+ * (CEO, TECH, GTM, CS, FIN, HR) or [ANY].
+ * Types: text, textarea, email, number, select, radio,
+ * checkbox, likert5, weak_developing_strong, composite, subhead.
+ * .core = ★ quarterly portfolio KPI. .required = cannot skip.
  * ============================================================ */
-
 const SCHEMA = [
-  /* SECTION 0 — IDENTIFICATION */
+  /* SECTION 0 — ABOUT YOU */
   {
     id: "identification",
     title: "About you",
@@ -338,333 +349,241 @@ const SCHEMA = [
     roles: [ANY],
     questions: [
       { id: "company", label: "Company", type: "select", required: true,
-        options: ["DiliTrust","EasyVista","Powell","Wedia","Equadis","Onventis","Sunstice","Cathay Capital","External guest","Other"] },
+        options: ["DiliTrust","EasyVista","Equadis","Onventis","Powell","Sunstice","Wedia"] },
       { id: "name", label: "Your name", type: "text", required: true, placeholder: "First Last" },
       { id: "role", label: "Your primary role", type: "select", required: true,
-        options: Object.entries(ROLES).map(([k,v]) => ({ value: k, label: v })),
+        options: ROLE_OPTIONS,
         help: "We tailor the questions to your scope. Pick the closest match." },
       { id: "email", label: "Email (optional)", type: "email",
         help: "Only used if Cathay needs to follow up on your answers.", optional: true }
     ]
   },
 
-  /* SECTION 1 — WHERE YOU STAND (Yelin External 4Q) */
+  /* SECTION 1 — SHARE & LEARN */
+  {
+    id: "share_learn",
+    title: "Share & learn",
+    description: "This is what we asked you in the invitation: what you would happily share with peers, and what you would love to learn from them. This section shapes the evening.",
+    roles: [ANY],
+    questions: [
+      { id: "share_topics", type: "textarea", required: true,
+        label: "Top 3 things you would happily share with peers",
+        help: "Be specific: a tool, a metric, a process, a win, a failure. A working demo counts double.",
+        placeholder: "1. ...\n2. ...\n3. ..." },
+      { id: "learn_topics", type: "textarea", required: true,
+        label: "Top 3 things you would love to learn from peers",
+        placeholder: "1. ...\n2. ...\n3. ..." },
+      { id: "not_again", type: "textarea", required: true,
+        label: "One thing you tried with AI that you would not do again",
+        help: "One sentence is fine. Failed pilots, wrong tools, premature autonomy: candid answers are the most useful ones for the room.",
+        placeholder: "Open." },
+      { id: "breakout_themes", type: "checkbox", required: true,
+        label: "Pick 2 to 3 breakout themes that interest you most",
+        help: "Drives the composition of the co-dev groups.",
+        options: [
+          "AI coding tools: deployment, measurement, fluency",
+          "AI in the product: agents, packaging, pricing",
+          "AI outbound and SDR automation",
+          "AI customer support and deflection",
+          "AI knowledge management and enablement",
+          "Data readiness and AI governance (incl. EU AI Act)",
+          "People and change: roles, training, champions",
+          "Business model: from seats to outcomes"
+        ]
+      },
+      { id: "learn_from_peers", type: "checkbox", optional: true,
+        label: "Companies you would most like to learn from",
+        help: "Used only for breakout seating, nothing else.",
+        options: ["DiliTrust","EasyVista","Equadis","Onventis","Powell","Sunstice","Wedia","No preference"] },
+      { id: "speaker_question", type: "textarea", optional: true,
+        label: "One question you would like our external speakers to address on stage",
+        placeholder: "Open." }
+    ]
+  },
+
+  /* SECTION 2 — WHERE YOU STAND */
   {
     id: "where_you_stand",
     title: "Where you stand",
-    description: "Four open questions on AI maturity. Adapted from Henry Yelin's external assessment framework. Quick text answers are fine, the goal is to surface what's real today, not to write essays.",
+    description: "Four questions on where AI stands in your function today. Quick answers are fine; we want what is real, not what is polished. Each question asks for a short answer plus a self-rating.",
     roles: [ANY],
     questions: [
-      { id: "yelin_dau", type: "composite",
-        label: "Daily active user (DAU) adoption of AI tooling in your function. What is your current measurement and number?",
-        help: "Strong answer: quantitative data by tool, by team. Weak answer: 'adoption is great' with no number.",
+      { id: "ws_adoption", type: "composite", required: true,
+        label: "Daily active use of AI tooling in your function: what do you measure, and what are the numbers?",
+        help: "A strong answer is quantitative, by tool and by team. 'Adoption is going well' is the weak version.",
         children: [
-          { id: "yelin_dau_text", type: "textarea", placeholder: "e.g. Engineering: 78% DAU on Cursor across 42 devs. Sales: 35% DAU on Clay outreach assistant." },
-          { id: "yelin_dau_self", type: "weak_developing_strong" }
+          { id: "ws_adoption_text", type: "textarea", required: true, placeholder: "e.g. Engineering: 78% DAU on Cursor across 42 devs. Sales: 35% weekly active on outreach assistant." },
+          { id: "ws_adoption_self", type: "weak_developing_strong" }
         ]
       },
-      { id: "yelin_impact", type: "composite",
-        label: "Where are you starting to see impact from AI tooling in your function?",
-        help: "Strong answer: specific dept-level metrics, e.g. PR throughput +18%, support deflection rate 32%, % new leads auto-generated. Weak answer: 'we move much faster'.",
+      { id: "ws_impact", type: "composite", required: true,
+        label: "Where is AI starting to show measurable impact in your function?",
+        help: "A strong answer points at function-level metrics: PR throughput, ticket deflection rate, share of leads auto-generated, time-to-answer.",
         children: [
-          { id: "yelin_impact_text", type: "textarea", placeholder: "e.g. PR throughput +22% YoY since Q3 2025; CS Tier 1 deflection at 38%." },
-          { id: "yelin_impact_self", type: "weak_developing_strong" }
+          { id: "ws_impact_text", type: "textarea", required: true, placeholder: "e.g. PR throughput +22% YoY since Q3 2025; Tier 1 deflection at 38%." },
+          { id: "ws_impact_self", type: "weak_developing_strong" }
         ]
       },
-      { id: "yelin_value", type: "composite",
+      { id: "ws_value", type: "composite", required: true,
         label: "What new value or cost savings will you deliver by end of 2026 from AI?",
-        help: "Strong answer: links AI impact to business value (revenue, features shipped, costs saved). Weak answer: no value or value qualitative and uncommitted.",
+        help: "A strong answer links AI to business value: revenue, features shipped, costs saved. No value linkage is the weak version.",
         children: [
-          { id: "yelin_value_text", type: "textarea", placeholder: "e.g. €1.2m new ARR from AI premium module; €600k OPEX saved on CS; -2.5 FTE on QA." },
-          { id: "yelin_value_self", type: "weak_developing_strong" }
+          { id: "ws_value_text", type: "textarea", required: true, placeholder: "e.g. €1.2m new ARR from AI premium module; €600k OPEX saved on CS; -2.5 FTE on QA." },
+          { id: "ws_value_self", type: "weak_developing_strong" }
         ]
       },
-      { id: "yelin_headcount", type: "composite",
-        label: "How does your AI product strategy account for AI's impact on your customers' headcount?",
-        help: "Strong answer: AI features aligned with customer labour replacement model with clear path to value. Weak answer: features that are technically cool but disconnected from customer value.",
-        roles: ["CEO","CPO","CTO"],
+      { id: "ws_customer", type: "composite", required: true,
+        roles: ["CEO","TECH","GTM","CS"],
+        label: "How does your AI product strategy account for AI's impact on your customers' headcount and budgets?",
+        help: "A strong answer connects your AI features to the work they replace or augment on the customer side, with a path to pricing.",
         children: [
-          { id: "yelin_headcount_text", type: "textarea", placeholder: "e.g. our agentic redlining replaces ~0.4 FTE of paralegal work per customer. We are repricing accordingly." },
-          { id: "yelin_headcount_self", type: "weak_developing_strong" }
+          { id: "ws_customer_text", type: "textarea", required: true, placeholder: "e.g. our agentic redlining replaces ~0.4 FTE of paralegal work per customer; we are repricing accordingly." },
+          { id: "ws_customer_self", type: "weak_developing_strong" }
         ]
       }
     ]
   },
 
-  /* SECTION 2 — ENGINEERING PRODUCTIVITY */
+  /* SECTION 3 — CORE KPIs */
   {
-    id: "engineering",
-    title: "Engineering productivity",
-    description: "Adopt → Impact → Value. Skip metrics you do not yet measure, but flag if it is on your near-term roadmap.",
-    roles: ["CTO","CPO","CEO"],
+    id: "core_kpis",
+    title: "Core KPIs",
+    description: "A short list of metrics we will track across the portfolio. Skip anything you do not measure yet: 'not measured' is itself a data point. Numbers are aggregated and anonymised in the June 18 restitution; no company is ever named on a number. CEOs see the starred metrics of every function so that companies with a single attendee are fully covered: skip whatever your team will answer.",
+    roles: [ANY],
     questions: [
-      { id: "eng_tools", type: "checkbox", label: "AI coding tools deployed",
-        options: ["GitHub Copilot","Cursor","Claude Code","Windsurf","Cody (Sourcegraph)","Codeium / Continue","JetBrains AI","Other / In-house","None yet"] },
-      { id: "eng_licensed_pct", type: "number", suffix: "%", core: true,
-        label: "% of engineers with an active AI coding licence",
-        help: "Adopt-stage metric. Active licence, not just provisioned." },
-      { id: "eng_dau_pct", type: "number", suffix: "%", core: true,
-        label: "Daily Active Users on AI coding tool over last 30 days (% of engineers)",
-        help: "Adopt-stage metric. The leading indicator of fluency." },
-      { id: "eng_pr_change", type: "text", core: true,
-        label: "Change in PR throughput since AI tools introduction",
-        help: "Impact-stage. e.g. +18% YoY, +22 vs T-12m. Estimate is fine.", placeholder: "+x% / not measured" },
-      { id: "eng_cycle_change", type: "text",
-        label: "Change in SDLC cycle time since AI tools introduction",
-        placeholder: "e.g. -15% / not measured" },
-      { id: "eng_onboard_change", type: "text", core: true,
-        label: "Change in time-to-onboard a new engineer",
-        help: "EasyVista reported 62% faster onboarding. Where are you?", placeholder: "e.g. -30% / from 12w to 8w" },
-      { id: "eng_dora", type: "radio", label: "DORA metrics in place?",
-        options: [
-          { value: "full", label: "Yes, all four (deploy freq, lead time, MTTR, change failure rate) tracked" },
-          { value: "partial", label: "Partial (some tracked)" },
-          { value: "no", label: "No formal DORA tracking" }
-        ]
-      },
-      { id: "eng_value_text", type: "textarea",
-        label: "Value-stage: any AI-attributable outcome (features shipped, tech debt reduced, defects remediated)",
-        help: "Move beyond Impact. What did AI enable that translated into real business value?", placeholder: "free text" },
-      { id: "eng_share_win", type: "textarea",
-        label: "One concrete engineering AI win you would be happy to share with peers",
-        placeholder: "1-3 sentences" }
-    ]
-  },
+      { id: "sub_company", type: "subhead", label: "Whole company", roles: [ANY] },
+      { id: "kpi_llm_pct", type: "number", suffix: "%", core: true,
+        label: "% of workforce with active enterprise LLM access (Copilot, ChatGPT Enterprise, Claude, Gemini...)",
+        help: "Active use in the last 30 days, not provisioned seats." },
+      { id: "agents_in_prod", type: "number", core: true, roles: ["CEO","TECH","FIN"],
+        label: "Number of AI agents in production with autonomous or semi-autonomous decision authority" },
 
-  /* SECTION 3 — GTM AI ADOPTION */
-  {
-    id: "gtm",
-    title: "GTM AI adoption",
-    description: "Outbound, inbound, customer support, customer success. Same logic: where are you, what works, what is open.",
-    roles: ["CRO","CMO","CEO"],
-    questions: [
-      { id: "gtm_outbound_pct", type: "number", suffix: "%",
+      { id: "sub_eng", type: "subhead", label: "Engineering", roles: ["TECH","CEO"] },
+      { id: "eng_dau_pct", type: "number", suffix: "%", core: true, roles: ["TECH","CEO"],
+        label: "% of engineers daily-active on AI coding tools over the last 30 days",
+        help: "The leading indicator of engineering fluency." },
+      { id: "eng_tools", type: "checkbox", roles: ["TECH"],
+        label: "AI coding tools deployed",
+        options: ["GitHub Copilot","Cursor","Claude Code","OpenAI Codex","Windsurf","JetBrains AI","Other / in-house","None yet"] },
+      { id: "eng_impact_metric", type: "text", roles: ["TECH"],
+        label: "One engineering impact metric you track since introducing AI tools, and its current value",
+        help: "PR throughput, cycle time, time-to-onboard a new engineer... whichever one you actually track.",
+        placeholder: "e.g. PR throughput +18% YoY / onboarding from 12w to 8w / not measured yet" },
+
+      { id: "sub_gtm", type: "subhead", label: "Go-to-market", roles: ["GTM","CEO"] },
+      { id: "gtm_outbound_pct", type: "number", suffix: "%", core: true, roles: ["GTM","CEO"],
         label: "% of outbound activity AI-powered (drafting, targeting, sequencing)",
-        help: "Active AI assistance, not just enrichment." },
-      { id: "gtm_lead_mix", type: "text",
-        label: "Inbound vs Outbound lead mix today",
+        help: "Active AI assistance, not just data enrichment." },
+      { id: "gtm_lead_mix", type: "text", roles: ["GTM"],
+        label: "Inbound vs outbound lead mix today",
         placeholder: "e.g. 70% inbound, 30% outbound" },
-      { id: "gtm_sales_tools", type: "checkbox", label: "AI tools deployed in sales / marketing",
-        options: ["Apollo / ZoomInfo","Clay","Outreach AI / Salesloft Rhythm","Gong","Lavender","11x.ai (Alice/Mike)","Cognism","HubSpot AI","Salesforce Einstein","Other","None yet"] },
-      { id: "gtm_lead_scoring", type: "radio", label: "AI-driven lead scoring in place?",
-        options: ["Yes, in production","Building","No"] },
-      { id: "gtm_cs_deflection", type: "number", suffix: "%", core: true,
-        label: "Customer support deflection rate via AI (Tier 1 tickets resolved without human)",
-        help: "Calmejane and McKinsey both quote 40-50% as the credible target. Where are you?" },
-      { id: "gtm_kb", type: "radio", label: "AI-queryable centralised knowledge base?",
-        options: [
-          { value: "yes", label: "Yes, in production with measurable coverage" },
-          { value: "building", label: "Building" },
-          { value: "no", label: "No" }
-        ]
-      },
-      { id: "gtm_kb_coverage", type: "number", suffix: "% coverage",
-        label: "If KB in production, estimated coverage of org's tribal knowledge",
-        optional: true },
-      { id: "gtm_share_win", type: "textarea",
-        label: "One concrete GTM AI win you would be happy to share with peers",
-        placeholder: "1-3 sentences" }
-    ]
-  },
 
-  /* SECTION 4 — PRODUCT AI STRATEGY */
-  {
-    id: "product",
-    title: "Product AI strategy",
-    description: "Where your product sits in the System of Record vs System of Action shift. The strategic question, in your own framing.",
-    roles: ["CEO","CPO","CTO"],
-    questions: [
-      { id: "prod_sor_soa", type: "radio",
-        label: "How would you characterise your product today on the SoR ↔ SoA continuum?",
-        help: "SoR = System of Record (data and audit). SoA = System of Action (where work happens, increasingly agentic).",
-        options: [
-          { value: "sor_pure", label: "Mostly SoR, no SoA layer yet" },
-          { value: "sor_copilot", label: "SoR with Copilot overlays (assist mode)" },
-          { value: "sor_wedge", label: "SoR + Wedge agents owning a job end to end" },
-          { value: "sor_orchestrator", label: "SoR + Orchestrator agents executing across systems" },
-          { value: "sentinel", label: "Sentinel pattern: monitor / detect / escalate across SoRs" },
-          { value: "soa_native", label: "We are an AI-native System of Action from the start" }
-        ]
-      },
-      { id: "prod_overlay_type", type: "checkbox",
-        label: "Type(s) of agentic overlay you are building or deploying",
-        help: "Multiple selections OK if you have several plays.",
-        options: [
-          "Copilot (assist within a workflow)",
-          "Wedge (own one job end to end)",
-          "Sentinel (monitor / detect / escalate)",
-          "Orchestrator (execute across systems)",
-          "None yet"
-        ]
-      },
-      { id: "prod_acv_ai_pct", type: "number", suffix: "% of ACV", core: true,
+      { id: "sub_cs", type: "subhead", label: "Customer support & success", roles: ["CS","CEO"] },
+      { id: "cs_deflection", type: "number", suffix: "%", core: true, roles: ["CS","CEO"],
+        label: "Customer support deflection rate via AI (Tier 1 tickets resolved without a human)",
+        help: "Credible industry benchmarks put 40-50% within reach. Where are you today?" },
+      { id: "cs_kb", type: "radio", roles: ["CS"],
+        label: "AI-queryable centralised knowledge base?",
+        options: ["Yes, in production with measurable coverage","Building","No"] },
+
+      { id: "sub_prod", type: "subhead", label: "Product", roles: ["CEO","TECH"] },
+      { id: "prod_acv_ai_pct", type: "number", suffix: "% of ACV", core: true, roles: ["CEO","TECH"],
         label: "% of ACV today coming from AI-priced or AI-bundled features",
-        help: "Either explicitly priced AI add-ons or AI features bundled into the core SKU at a clearly higher price point." },
-      { id: "prod_attach_rate", type: "number", suffix: "%", core: true,
-        label: "AI customer attach rate (% customers actively using ≥1 AI feature in last 30d)",
-        help: "Engagement, not just licence. This is the proxy for whether AI is becoming sticky." },
-      { id: "prod_pricing_today", type: "text",
-        label: "Pricing model mix today (seat-based vs hybrid vs outcome / value-based, in %)",
-        placeholder: "e.g. 80% seat, 15% usage, 5% outcome" },
-      { id: "prod_pricing_target", type: "text",
-        label: "Target mix end of 2026",
-        placeholder: "e.g. 50% seat, 30% usage, 20% outcome" },
-      { id: "prod_competitor", type: "textarea",
-        label: "Biggest AI-native competitive threat in your category — name them",
-        help: "We will treat this as confidential intel. Cathay won't share name attribution at the after-work."
+        help: "Explicitly priced AI add-ons, or AI features bundled into the core SKU at a clearly higher price point." },
+      { id: "prod_attach_rate", type: "number", suffix: "%", core: true, roles: ["CEO","TECH"],
+        label: "AI customer attach rate: % of customers actively using at least one AI feature in the last 30 days",
+        help: "Engagement, not licences: the proxy for whether your AI is becoming sticky." },
+      { id: "prod_position", type: "radio", required: true, roles: ["CEO","TECH"],
+        label: "Which best describes your product today?",
+        options: [
+          "A system of record, no meaningful AI layer yet",
+          "A system of record with assistive AI features (suggestions, drafting, search)",
+          "Agents owning at least one complete job end to end for the customer",
+          "Agents monitoring and acting across other systems, beyond our own perimeter",
+          "AI-native: the product acts on the customer's behalf by design"
+        ]
       },
-      { id: "prod_roadmap_share", type: "textarea",
-        label: "One AI product bet on your roadmap you would be happy to discuss with peers",
-        placeholder: "1-3 sentences" }
+      { id: "prod_competitor", type: "textarea", roles: ["CEO","TECH"],
+        label: "Biggest AI-native competitive threat in your category — name them",
+        help: "Confidential to Cathay, never redistributed with attribution." },
+
+      { id: "sub_fin", type: "subhead", label: "Finance & operating leverage", roles: ["FIN","CEO"] },
+      { id: "fin_inference_cost", type: "number", suffix: "% of revenue", core: true, roles: ["FIN","CEO"],
+        label: "AI / inference cost as % of revenue (best estimate)",
+        help: "The new line in the SaaS P&L." },
+      { id: "fin_fte_saved", type: "text", core: true, roles: ["FIN","CEO"],
+        label: "AI-attributed FTE-equivalents saved across the company (estimate)",
+        help: "Across engineering, GTM, support, ops. Best estimate, no false precision needed.",
+        placeholder: "e.g. ~8 FTE total, of which 3.5 in engineering" },
+
+      { id: "sub_people", type: "subhead", label: "People", roles: ["HR","CEO"] },
+      { id: "hr_enablement", type: "checkbox", roles: ["HR","CEO"],
+        label: "AI enablement in place today",
+        options: [
+          "Formal AI training program",
+          "Champions / ambassadors network",
+          "Usage policy and guidelines published",
+          "AI fluency part of hiring or performance criteria",
+          "Dedicated budget for AI tools per employee",
+          "None of these yet"
+        ]
+      }
     ]
   },
 
-  /* SECTION 5 — FOUNDATIONS & ORG */
+  /* SECTION 4 — MATURITY SNAPSHOT */
   {
-    id: "foundations",
-    title: "Foundations & org",
-    description: "Calmejane's six readiness dimensions, condensed. Plus the failure modes you have already encountered. Self-rate honestly — under-rating is fine.",
-    roles: ["CEO","CTO","COO"],
+    id: "maturity",
+    title: "Maturity snapshot",
+    description: "Company-level readiness, one screen. Self-rate honestly: under-rating is more useful to you than over-rating. Anonymised in the restitution.",
+    roles: ["CEO","TECH","FIN"],
     questions: [
-      { id: "found_data", type: "likert5",
-        label: "Data quality & governance for AI",
-        help: "1 = limited and unstructured. 5 = clean, governed, real-time accessible by agents." },
-      { id: "found_platform", type: "likert5",
-        label: "AI platform / orchestration capability",
-        help: "Ability to orchestrate multiple models, version them, supervise them." },
-      { id: "found_process", type: "likert5",
-        label: "Process architecture (decomposition into task graphs)",
-        help: "Pre-condition for agentification. Without it, you cannot deploy agents reliably." },
-      { id: "found_governance", type: "likert5",
-        label: "AI governance & risk framework (incl. EU AI Act)",
-        help: "Who decides what an agent can do? Who is accountable on errors? Are use cases classified by risk?" },
-      { id: "found_org", type: "likert5",
-        label: "Org design (transformation function, redefined roles, supervision)",
-        help: "5 = dedicated AI / transformation lead at exco level, roles redefined." },
-      { id: "found_multimodal", type: "likert5",
-        label: "Multimodal capability (voice, image, document, structured data unified)",
-        help: "Optional for some categories; central for others." },
-      { id: "found_failures", type: "checkbox",
-        label: "Failure modes you have already encountered (multi-select)",
-        help: "Adapted from Calmejane's '7 Failure Modes'. Naming them publicly accelerates learning across the portfolio.",
+      { id: "mat_data", type: "likert5", required: true,
+        label: "Data quality and accessibility for AI",
+        help: "1 = limited and unstructured. 5 = clean, governed, accessible in real time by agents." },
+      { id: "mat_process", type: "likert5", required: true,
+        label: "Process documentation and decomposition",
+        help: "How well your workflows are documented and broken into discrete tasks: the precondition for deploying agents reliably." },
+      { id: "mat_governance", type: "likert5", required: true,
+        label: "AI governance and risk management (incl. EU AI Act readiness)",
+        help: "Who decides what an agent can do? Who is accountable for errors? Are use cases classified by risk?" },
+      { id: "mat_org", type: "likert5", required: true,
+        label: "Organisation design for AI (ownership, redefined roles, supervision)",
+        help: "5 = clear AI ownership at exco level and roles already redefined around it." },
+      { id: "mat_phase", type: "radio", required: true,
+        label: "Where do you sit on deployment?",
         options: [
-          "Shadow agents — teams deploying agents outside governance",
-          "Autonomy without evidence — agents given autonomy before reliability proven",
-          "Dual running pitfall — old + new in parallel for too long",
-          "Data debt — shortcuts that compound as you scale",
-          "Governance afterthought — gov defined too late",
-          "Tool sprawl — incompatible frameworks proliferating",
-          "Change without decommissioning — adding agents without retiring old processes",
-          "None encountered yet"
+          "Foundations: data and governance groundwork, nothing in production yet",
+          "Pilots: 2-3 use cases live at controlled scope",
+          "Industrialising: scaled deployment across one full domain",
+          "Scaling: multi-domain, legacy processes being decommissioned, ROI tracked"
         ]
       },
-      { id: "found_phase", type: "radio", core: true,
-        label: "Where do you sit on the deployment phases?",
-        help: "Adapted from Calmejane's 4-phase model.",
-        options: [
-          { value: "foundation", label: "Phase 1 — Foundation: readiness assessment, data and gov fundamentals, no agent in production" },
-          { value: "pilot", label: "Phase 2 — Pilot: 2-3 use cases at controlled scope, dual running" },
-          { value: "industrialize", label: "Phase 3 — Industrialize: scaled deployment in one full domain" },
-          { value: "scale", label: "Phase 4 — Scale: multi-domain, recommissioning historical processes, ROI capture" }
-        ]
-      },
-      { id: "found_lead", type: "radio",
+      { id: "mat_lead", type: "radio", required: true,
         label: "Dedicated AI / transformation lead?",
         options: [
+          "The CEO personally (CEO = Chief AI Transformation Officer)",
           "Chief Transformation Officer (or equivalent) at exco level",
           "AI lead reporting to CEO or CTO",
           "Distributed across CTO / CPO / CDO with no single owner",
-          "None today",
-          "Building / hiring"
+          "Building / hiring",
+          "None today"
         ]
       },
-      { id: "found_workforce_pct", type: "number", suffix: "%", core: true,
-        label: "% of workforce with active enterprise LLM access (Copilot, ChatGPT Enterprise, Claude, Gemini, etc.)",
-        help: "Active access, not just provisioned. Cathay's view: under 50% in 2026 is a leading concern." }
-      ]
-  },
-
-  /* SECTION 6 — INTERNAL FINANCIAL KPIs */
-  {
-    id: "financial",
-    title: "Internal AI assessment KPIs",
-    description: "Optional. Cathay-only, anonymised in restitution. We will aggregate to ranges, never name a company on a number. Skip any field you cannot or do not want to share.",
-    roles: ["CEO","CFO","COO"],
-    confidential: true,
-    questions: [
-      { id: "fin_rd_pct", type: "number", suffix: "% of revenue",
-        label: "R&D spend as % of revenue (LTM)",
-        help: "Higher ratio = more to gain from AI productivity improvement.", optional: true },
-      { id: "fin_eng_hc_pct", type: "number", suffix: "%",
-        label: "Engineering headcount as % of total HC", optional: true },
-      { id: "fin_rev_per_eng", type: "number", suffix: "€",
-        label: "Revenue per engineer (LTM, €)", optional: true },
-      { id: "fin_arr_growth", type: "number", suffix: "% YoY",
-        label: "ARR YoY growth (LTM)", optional: true },
-      { id: "fin_nrr", type: "number", suffix: "%",
-        label: "Net Revenue Retention (NRR)", optional: true },
-      { id: "fin_gm", type: "number", suffix: "%", core: true,
-        label: "Gross margin (LTM, %)",
-        help: "The line where AI inference cost will start to bite." },
-      { id: "fin_gm_change", type: "text", core: true,
-        label: "Gross margin change vs prior LTM",
-        placeholder: "e.g. -1.2pp / +0.8pp" },
-      { id: "fin_inference_cost", type: "number", suffix: "% of revenue", core: true,
-        label: "AI / inference cost as % of revenue",
-        help: "Best estimate. The new line in the SaaS P&L." },
-      { id: "fin_rule40", type: "number", suffix: "(rule of 40)",
-        label: "Rule of 40 score (growth % + EBITDA margin %)", optional: true },
-      { id: "fin_cac_payback", type: "number", suffix: "months",
-        label: "CAC payback (months)", optional: true },
-      { id: "fin_ltv_cac", type: "number", suffix: "× ratio",
-        label: "LTV / CAC", optional: true },
-      { id: "fin_pipeline_coverage", type: "number", suffix: "× quota",
-        label: "Pipeline coverage ratio (current quarter)", optional: true },
-      { id: "fin_fte_saved", type: "text", core: true,
-        label: "AI-attributed FTE-equivalent saved across the company (estimate)",
-        help: "Across engineering, GTM, support, ops. Best estimate, no false precision needed.",
-        placeholder: "e.g. ~8 FTE total, of which 3.5 in engineering" },
-      { id: "fin_agents_in_prod", type: "number",
-        label: "Number of AI agents in production with autonomous or semi-autonomous decision authority", optional: true }
-    ]
-  },
-
-  /* SECTION 7 — SHARE & LEARN */
-  {
-    id: "share_learn",
-    title: "Share & learn",
-    description: "This is what we asked you for in the invitation: what you would happily share with peers, and what you would love to learn. Drives the breakouts.",
-    roles: [ANY],
-    questions: [
-      { id: "share_topics", type: "textarea", required: true,
-        label: "Top 3 things you would happily share with peers",
-        help: "Bullet list is fine. Be specific (a tool, a metric, a process, a failure).",
-        placeholder: "1. ...\n2. ...\n3. ..." },
-      { id: "learn_topics", type: "textarea", required: true,
-        label: "Top 3 things you would love to learn from peers",
-        placeholder: "1. ...\n2. ...\n3. ..." },
-      { id: "breakout_themes", type: "checkbox", required: true,
-        label: "Pick 2 to 3 breakout themes that interest you most",
-        help: "Drives the co-dev groups composition.",
+      { id: "mat_pitfalls", type: "checkbox", optional: true,
+        label: "Which of these have you already run into?",
+        help: "Naming them accelerates learning across the portfolio. Anonymised like everything else.",
         options: [
-          "AI coding tools — deployment, measurement, fluency tactics",
-          "AI product strategy — SoR/SoA, overlay typology, pricing transformation",
-          "AI outbound & SDR automation",
-          "AI customer support & deflection",
-          "AI knowledge management & enablement",
-          "Foundations — data, governance, EU AI Act",
-          "People & change — roles, training, champions, decommissioning",
-          "Business model & pricing — from seat to outcome",
-          "Build vs partner vs acquire — M&A and tech bets"
+          "Teams deploying AI tools or agents outside any governance",
+          "Autonomy granted to an agent before its reliability was proven",
+          "Old and new process running in parallel for far too long",
+          "Data shortcuts that compounded as usage scaled",
+          "Governance defined after deployment instead of before",
+          "Incompatible AI tools multiplying across teams",
+          "Teams bypassing or quietly distrusting the AI workflow",
+          "None of these yet"
         ]
-      },
-      { id: "deep_dive_peers", type: "checkbox",
-        label: "Specific portfolio companies you would most like to deep-dive with",
-        help: "Optional. We use this for breakout seating, not for any other purpose.",
-        options: ["DiliTrust","EasyVista","Powell","Wedia","Equadis","Onventis","Sunstice","No preference"] },
-      { id: "keynote_question", type: "textarea",
-        label: "One question you would want answered in the Patrick Marous keynote Q&A or in plenary",
-        placeholder: "Open." }
+      }
     ]
   }
 ];
@@ -672,7 +591,7 @@ const SCHEMA = [
 /* ============================================================
  * STATE
  * ============================================================ */
-const STORAGE_KEY = "ai_lex_2026_responses_v1";
+const STORAGE_KEY = "ai_lex_2026_responses_v2";
 const state = {
   step: 0,                    // 0 = intro, then 1..N = sections, N+1 = confirmation
   answers: {},
@@ -709,22 +628,22 @@ function flashSaveIndicator() {
 }
 
 /* ============================================================
- * ROLE FILTERING
+ * COMMUNITY FILTERING
  * ============================================================ */
-function sectionVisibleForRole(section, role) {
+function sectionVisibleForRole(section, community) {
   if (!section.roles || section.roles.includes(ANY)) return true;
-  if (!role) return true;
-  return section.roles.includes(role);
+  if (!community) return true;
+  return section.roles.includes(community);
 }
-function questionVisibleForRole(question, sectionRoles, role) {
+function questionVisibleForRole(question, sectionRoles, community) {
   const roles = question.roles || sectionRoles;
   if (!roles || roles.includes(ANY)) return true;
-  if (!role) return true;
-  return roles.includes(role);
+  if (!community) return true;
+  return roles.includes(community);
 }
 function computeVisibleSections() {
-  const role = state.answers.role || null;
-  return SCHEMA.filter(s => sectionVisibleForRole(s, role));
+  const community = communityOf(state.answers.role);
+  return SCHEMA.filter(s => sectionVisibleForRole(s, community));
 }
 
 /* ============================================================
@@ -754,20 +673,29 @@ function renderIntro() {
       <h1>AI LEX 2026 <span class="accent">/ Pre-event questionnaire</span></h1>
       <p class="subtitle">Cathay Capital · B2B SaaS portfolio peer-learning session</p>
 
-      <p class="lede">Following our SF AI trip, we are gathering the leadership teams of our seven B2B SaaS portfolio companies for an afternoon of peer learning and co-dev on AI transformation. To make the session genuinely useful, we are asking you to share, ahead of the day, what you have already deployed, what you have learned, and what you would like to learn from your peers.</p>
+      <p class="lede">We are gathering the leadership teams of our seven B2B SaaS portfolio companies for an evening of peer learning and co-dev on AI transformation. To make it useful, every participant fills this in beforehand: what you have deployed, what you have learned, and what you want to learn from your peers.</p>
 
-      <p class="lede">This questionnaire is routed to your role, takes around 10 to 15 minutes, and saves your progress locally so you can pause and resume in the same browser. Cathay will produce an anonymised restitution. Confidential numbers (the optional financial section) are seen only by Cathay and never attributed to a named company.</p>
+      <p class="lede">The questionnaire is routed to your role and takes 6 to 12 minutes. Your progress saves locally in your browser, so you can pause and resume. <strong>Please submit by ${CONFIG.DEADLINE}.</strong></p>
+
+      <div class="meta">
+        <div class="meta-title">How your answers are used</div>
+        <div><strong>1.</strong>An anonymised portfolio benchmark presented on June 18. No company is ever named on a number.</div>
+        <div><strong>2.</strong>The composition and topics of the co-dev breakout groups.</div>
+        <div><strong>3.</strong>A small set of metrics (marked ★) will become a quarterly portfolio dashboard, so progress is tracked collectively after the event.</div>
+      </div>
 
       <div class="meta">
         <div><strong>Event</strong>${CONFIG.EVENT_DATE} · 4:00 pm to 9:30 pm</div>
         <div><strong>Place</strong>${CONFIG.EVENT_PLACE}</div>
-        <div><strong>Format</strong>Virtual keynote, plenary, co-dev breakouts, cocktail on the terrace</div>
+        <div><strong>Format</strong>Keynote, plenary, co-dev breakouts, cocktail on the terrace</div>
         <div><strong>Keynote</strong>Patrick Marous — Global CEO Business Unit Solutions, Thyssenkrupp Materials Services</div>
+        <div><strong>On stage</strong>Johannes Kliesch — co-founder &amp; CEO, SNOCKS</div>
+        <div><strong>Live demo</strong>Gilles Lancien — Operating Partner — BOT, an AI-native enterprise software</div>
       </div>
 
       <p class="legend">
         <span class="badge core">★ Core KPI</span> = metric Cathay will track quarterly across the portfolio post-event. &nbsp;&nbsp;
-        <span class="badge confidential">CATHAY ONLY</span> = financial section, anonymised restitution. &nbsp;&nbsp;
+        <span class="badge required">Required</span> = cannot skip. &nbsp;&nbsp;
         <span class="badge optional">Optional</span> = skip if not measured today.
       </p>
 
@@ -800,7 +728,7 @@ function renderForm() {
   const sections = state.visibleSections;
   const idx = state.step - 1;
   const section = sections[idx];
-  const role = state.answers.role || null;
+  const community = communityOf(state.answers.role);
 
   // Sidebar
   const sidebar = `
@@ -817,14 +745,14 @@ function renderForm() {
   `;
 
   // Section
-  const visibleQuestions = (section.questions || []).filter(q => questionVisibleForRole(q, section.roles, role));
+  const visibleQuestions = (section.questions || []).filter(q => questionVisibleForRole(q, section.roles, community));
   const isLast = idx === sections.length - 1;
 
   const sectionHtml = `
     <section class="section" data-section="${section.id}">
       <div class="section-header">
         <div>
-          <div class="section-step">Section ${idx+1} of ${sections.length}${section.confidential ? ' · ' : ''}${section.confidential ? '<span class="badge confidential">CATHAY ONLY</span>' : ''}</div>
+          <div class="section-step">Section ${idx+1} of ${sections.length}</div>
           <div class="section-title">${section.title}</div>
         </div>
       </div>
@@ -847,6 +775,9 @@ function renderForm() {
 }
 
 function renderQuestion(q) {
+  if (q.type === 'subhead') {
+    return `<div class="q-subhead">${escapeHTML(q.label)}</div>`;
+  }
   const value = state.answers[q.id];
   const requiredBadge = q.required ? `<span class="badge required">REQUIRED</span>` : '';
   const coreBadge = q.core ? `<span class="badge core">★ CORE KPI</span>` : '';
@@ -1045,12 +976,13 @@ function onNext() {
 }
 
 function validateSection(section) {
-  const role = state.answers.role || null;
+  const community = communityOf(state.answers.role);
   const errors = [];
   for (const q of (section.questions || [])) {
-    if (!questionVisibleForRole(q, section.roles, role)) continue;
+    if (q.type === 'subhead') continue;
+    if (!questionVisibleForRole(q, section.roles, community)) continue;
     const val = state.answers[q.id];
-    if (q.required) {
+    if (q.required && q.type !== 'composite') {
       const empty = (val === undefined || val === null || val === '' || (Array.isArray(val) && val.length === 0));
       if (empty) {
         errors.push(`Required: "${q.label}".`);
@@ -1077,6 +1009,7 @@ async function submit() {
     const payload = {
       _subject: `AI LEX 2026 — ${state.answers.company || 'Unknown'} — ${state.answers.name || 'Unknown'}`,
       submittedAt: new Date().toISOString(),
+      questionnaireVersion: "v2",
       answers: state.answers
     };
     const res = await fetch(CONFIG.SUBMIT_ENDPOINT, {
@@ -1104,8 +1037,8 @@ function renderConfirmation() {
       <div class="confirmation">
         <div class="checkmark">✓</div>
         <h2>Thank you</h2>
-        <p>Your answers have been submitted. We will use them to shape the breakout sessions on June 18 and to feed the consolidated portfolio benchmarks.</p>
-        <p>Anything you would like to add later? Email <a href="mailto:${CONFIG.CONTACT_EMAIL}">${CONFIG.CONTACT_EMAIL}</a>.</p>
+        <p>Your answers will shape the breakouts on June 18 and feed the portfolio benchmark presented that evening.</p>
+        <p>Anything to add later? Email <a href="mailto:${CONFIG.CONTACT_EMAIL}">${CONFIG.CONTACT_EMAIL}</a>.</p>
         <p style="margin-top: 28px;"><button class="btn btn-ghost" onclick="window.location.reload()">Submit another response</button></p>
       </div>
     </div>
